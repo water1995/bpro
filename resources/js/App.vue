@@ -66,7 +66,7 @@ export default {
             console.log(JSON.stringify(this.$route.query));
 
            this.req.get('auth/init').then(response =>  {
-                console.log(response);
+               /* console.log(response);
                 if(this.token != 0){
                 console.log('push');
                 this.user = null;
@@ -74,7 +74,7 @@ export default {
                 this.initiated = true;
                 this.$router.push('/feedback');
             }
-               else if(response.data == ""){
+               else*/ if(response.data == ""){
                     console.log(1);
                     this.user = null;
                     this.loading =false;

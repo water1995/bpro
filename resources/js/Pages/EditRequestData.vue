@@ -1,3 +1,4 @@
+ 
 <template>
 <div class="container">
   <div class="container ml-3">
@@ -14,11 +15,11 @@
         </div>
     </div>
     
-    <!--<EditDetail v-show='sedit' :cud='this.cud' :app='this.app' :cosedit.sync='cosedit' :course.sync='course' :activities.sync='activities' :prof.sync='prof' :ap.sync='ap' :apedit.sync='apedit' :coedit.sync='coedit' :edit.sync="edit" :detail="detail" :achievement.sync="achievement" v-on:detail="AddData($event)"></EditDetail>-->
+    
     <EditProfActivity ref='epa' :cud='this.cud' :app='this.app' 
     :cosedit.sync='cosedit' :course.sync='course' :activities.sync='activities' 
-    :prof.sync='prof' :aap.sync='aap' :ap.sync='ap' :apedit.sync='apedit' :coedit.sync='coedit' 
-    :edit.sync="edit" :detail="detail" :achievement.sync="achievement" 
+    :aap.sync='aap' :ap.sync='ap' :apedit.sync='apedit'  
+     :detail="detail" :achievement.sync="achievement" 
     v-on:detail="AddData($event)"></EditProfActivity>
 
    <nav class=" pb-0    " aria-label="...">
@@ -55,7 +56,7 @@
         <h6 class="ml-1 mt-1">University: {{cud.university}}</h6>
         <h6 class="ml-1 mt-1   ">Dept: {{cud.dept}}</h6>
         <h6 class="ml-1 mt-1 mt-auto float-bottom   ">Deadline: {{cud.deadline}}</h6>
-        <!--<h6 class="ml-1">File:<a class="mb-3 h6" href='#' @click.prevent="dp(achievement.file)"> {{data.file}}</a></h6>-->
+        
         <div class="row ml-1 mt-1 mb-1 mt-auto    ">
         <div class="col-lg-3"><button @click="editData(cud)" class=" btn btn-primary btn-sm" style="width:70px">Edit</button></div>
         <div class="col-lg-3 ml-4 "><button @click="deleted(cud.id)" class=" btn btn-danger btn-sm" style="width:70px">Delete</button></div>
@@ -80,10 +81,11 @@ export default {
   props:['app'],
     data(){
         return{
-        details:['Edit Activity with Professor','Edit Course'],detail:'',showa:false,
-        edit:false,apedit:false,coedit:false,ap:false,aap:false,
-        prof:'',cosedit:false,activities:[],activity_id:'',pagination:{},
-        courses:[],cud:false,showm:false,src:'',
+        details:['Edit Activity with Professor','Edit Course'],detail:'',showa:false,courses:[],
+        activities:[],ap:false,aap:false,apedit:false,
+        
+        cosedit:false,pagination:{},
+        cud:false,showm:false,src:'',
         achievement:{
             id:'',
             title:'',
@@ -92,7 +94,7 @@ export default {
             marks:'',
             file:'',
             file_name:''},
-            ap2edit:false,
+           
         course:{
             id:'',
             rid:'',
@@ -100,7 +102,6 @@ export default {
             uni:'',
             dept:'',
             dead:''}
-
             
         }
     },
@@ -109,19 +110,11 @@ export default {
     },
     methods:{
       mode:function(){
-            console.log(1);
+           
+            let vm = this;
+            this.showa = true;
             if(this.detail == 'Edit Activity with Professor'){
-                //'det/details/1'
-                /*if(this.apedit == true){
-                    this.achievement.id = null;
-                   this.achievement.title = null;
-                   this.achievement.activity = null;
-                   this.achievement.professor = null;
-                   this.achievement.marks = null;
-                }*/
                
-                let vm = this;
-                //page_url = page_url || 'det/details/1';
                fetch('api/prof_activity/details/'+this.app.reqID)
                .then(res => res.json())
                .then(res => {
@@ -129,60 +122,24 @@ export default {
                    this.courses = null;
                    this.activities = res.data;
                    vm.makePagination(res.meta,res.links);
-                   /*this.courses = null;
-                   this.course.id = null;
-                   this.course.rid = null;
-                   this.course.course = null;
-                   this.course.uni = null;
-                   this.course.dept = null;
-                   this.course.dead = null;
-                   this.ap = true;
-                   this.apedit = false;
-                   this.prof = res.data[0].professor;
-                   this.cud = false;*/
-                   //this.edit = true;
+                   
                    this.cud = false;
-                   this.showa = true;
+                   
                }).catch(err => console.log(err));
             }
             else if(this.detail == 'Edit Course'){
-                //'det/details/1'
-                /*if(this.cosedit == true){
-                    this.course.id = null;
-                   this.course.rid = null;
-                   this.course.course = null;
-                   this.course.uni = null;
-                   this.course.dept = null;
-                   this.course.dead = null;
-                }
-                this.cosedit = false;*/
-                let vm = this;
-                //page_url = page_url || 'det/details/1';
+               
                fetch('api/course/details/'+this.app.reqID)
                .then(res => res.json())
                .then(res => {
                    console.log(res.data);
                    this.activities = null;
                    this.courses = res.data;
-                /*this.activities.forEach(element => {
-                       console.log(element.id);
-                   });*/
+                
                    vm.makePagination(res.meta,res.links);
-                   /*this.activities = null;
-                   this.achievement.id = null;
-                   this.achievement.title = null;
-                   this.achievement.activity = null;
-                   this.achievement.professor = null;
-                   this.achievement.marks = null;
-                   //this.ap = true;
-                   this.cud = true;
-                   this.coedit = false;
-                   this.ap = false;*/
+                   
                    this.ap = false;
-                   this.showa = true;
-                   //this.apedit =false;
-                   //this.prof = res.data[0].professor;
-                   //this.edit = true;
+                   
                }).catch(err => console.log(err));
             }
     },
@@ -209,6 +166,9 @@ export default {
             if(data.marks != 0){
             this.achievement.marks = data.marks;
             }
+            else{
+                this.achievement.marks = 'none';
+            }
             
                 this.achievement.file_name = data.file_name;
             
@@ -229,12 +189,10 @@ export default {
             this.$refs.epa.show();
             }
             
-
         },
         fetchdata(page_url){
             console.log(page_url);
             let vm = this;
-                //page_url = page_url || 'det/details/1';
             
                fetch(page_url)
                .then(res => res.json())
@@ -250,8 +208,6 @@ export default {
         },
         AddData(data){
         
-             console.log(data);
-             //this.apedit == false
              if(this.detail == 'Edit Activity with Professor'){
              this.achievement.title = data.title;
              this.achievement.activity = data.desc;
@@ -286,10 +242,9 @@ export default {
                      this.achievement.marks ='';
                      this.achievement.file = null;
                      this.ap = false;
-                     //this.aap = false;
+                    
                  });
              }
-
              }else{
                     if(typeof(data) == 'boolean'){
                      console.log('in');
@@ -313,7 +268,6 @@ export default {
                     
                  });
              }
-
              
              }
              }
@@ -327,7 +281,6 @@ export default {
                  this.mode();
              }
              else{
-
              if(this.cosedit == false){
                  //Add
                  this.course.id = '';
@@ -348,7 +301,6 @@ export default {
                      this.$refs.epa.hide();
                      this.mode();
                  });
-
              }else{
                  console.log("edit");
                  console.log("course:"+this.course.course);
@@ -369,9 +321,8 @@ export default {
                      this.course.dead = '';
                      alert('Edited');
                      this.$refs.epa.hide();
-                     //this.mode();*/
+                     
                  });
-
              }
              }
              
@@ -381,7 +332,6 @@ export default {
         ,
          deleted(id){
             const did = id;
-
             if(this.detail == 'Edit Activity with Professor'){
                 
               if(confirm('Are you sure?')){
@@ -435,16 +385,13 @@ export default {
                 
             }
             this.$refs.epa.show();
-            /*this.ap = false;*/
+            
             
             }
         }
     }
-
-
-
 </script>
 
 <style>
-
 </style>
+

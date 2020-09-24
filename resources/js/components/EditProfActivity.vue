@@ -2,14 +2,14 @@
   <div class="container">
     <modal  name="editProfActivity" height="auto" width='700' :draggable="true">
 
-    <!--<div class="row  justify-content-center">-->
+    
         <div class="card" style="width:800">
         
         <div class="card-header">
           <div class="float-right"><button @click="hide">❌</button></div>
           <div v-show='aap' class="text-center ml-5">ADD</div>
           <div v-show='ap' class="text-center ml-5">EDIT</div>
-          <div v-show='save == false' class="text-center ml-5">ADD</div>
+          <div v-show='cud == true && save == false' class="text-center ml-5">ADD</div>
           <div v-show='save' class="text-center ml-5">EDIT</div>
           
           </div>
@@ -21,7 +21,7 @@
         <input  type="text"  class="form-control" placeholder="Title" v-model="app.prof" readonly>
         <div class="row justify-content-center">
               <div  class="col-lg-12 px-0">
-        <input v-show="smark || ap" type="text" class="form-control" placeholder="Marks" v-model="marks" >
+        <input v-show="smark" type="text" class="form-control" placeholder="Marks" v-model="marks" >
         <input v-show='sfile' type="text" class="form-control" placeholder="Marks" v-model="name" >
         <input ref="file" type="file" style="width:610px" @change="onFileChange" class="bg-white border border-dark">
               </div>
@@ -38,7 +38,7 @@
         <input  type="text"  class="form-control" placeholder="Title" v-model="app.prof" readonly>
         <div class="row justify-content-center">
               <div  class="col-lg-12 px-0">
-        <input v-show="smark || ap" type="text" class="form-control" placeholder="Marks" v-model="marks" >
+        <input  type="text" class="form-control" placeholder="Marks" v-model="marks" >
         <input v-show='sfile' type="text" class="form-control" placeholder="Marks" v-model="name" >
         <input ref="file" type="file" style="width:610px" @change="onFileChange" class="bg-white border border-dark">
               </div>
@@ -87,7 +87,7 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 var moment = require('moment');
 export default {
-  props:['app','add','cud','cosedit','edit','achievement','apedit','coedit','ap','activities','course','aap'],
+  props:['app','add','cud','cosedit','edit','achievement','apedit','ap','activities','course','aap'],
 components:{ DatePicker},
 data(){
     return{
@@ -103,23 +103,24 @@ data(){
      console.log(newVal);
    		if (newVal == true || oldVal == true){
          this.aptedit =true;
+         if(this.cud != false){
          this.save = true;
+         }
          this.title = this.achievement.title;
       this.desc = this.achievement.activity;
       this.professor =this.achievement.professor;
-      if(this.marks != 0){
+      if(this.achievement.marks != "none"){
+         console.log('mark');
         this.smark = true;
       this.marks = this.achievement.marks;
       }
       else{
-        
+         console.log('file');
         this.sfile = true;
         this.name = this.achievement.file_name;
         
-        //this.aptedit =false;
       }
-      //this.edit = false;
-      //this.oldVal = false;
+     
      }
      
    }
@@ -134,32 +135,23 @@ data(){
          this.coursen = this.course.course;
       this.uni = this.course.uni;
       this.dept =this.course.dept;
-      //this.deadline = moment(this.course.deadline).format('DD-MM-YYYY');
-      //moment(this.course.dead, moment.defaultFormat).toDate();
-      //this.deadline = moment(this.course.dead, moment.defaultFormat).toDate();
-      console.log(this.course.deadline)
-      console.log(this.deadline)
+      
       this.professor = this.app.prof;
-      //this.edit = false;
+      
       
      }
      else{
        this.coursen = '';
       this.uni = '';
       this.dept ='';
-      //this.deadline = moment(this.course.deadline).format('DD-MM-YYYY');
-      //moment(this.course.dead, moment.defaultFormat).toDate();
-      //this.deadline = moment(this.course.dead, moment.defaultFormat).toDate();
-      console.log(this.course.deadline)
-      console.log(this.deadline)
+      
       this.professor = ''
      }
    },
    achievement:{
      deep:true,
      handler:function(newVal){
-     //console.log('achieve old'.oldVal);
-     //this.save = false;
+     
      console.log('achieve new'+newVal.id);
      if(this.cedit == false){
      this.title = this.achievement.title;
@@ -175,24 +167,11 @@ data(){
       }
       else{
          this.marks = this.achievement.marks;
-
       }
      }
      }
    },
-   /*course:{
-     deep:true,
-     handler:function(newVal){
-       console.log('achieve new'+newVal.id);
-       this.coursen = this.course.course;
-      this.uni = this.course.uni;
-      this.dept =this.course.dept;
-      //this.deadline = moment(this.course.dead, moment.defaultFormat).toDate();
-      //console.log(this.course.deadline)
-      //console.log(this.deadline)
-      this.professor = this.app.prof;
-     }
-   }*/
+  
      
 },
 methods:{
@@ -230,7 +209,6 @@ methods:{
          console.log(sizeMB);
          const sizeKB = file.size/1024;
           console.log(file);
-
           let reader = new FileReader();
       //let vm = this;
                 reader.onload = (e) => {
@@ -250,10 +228,10 @@ methods:{
     this.marks = ' ';
     this.name = ' ';
     this.$refs.file.value = '';
-    /*this.aptedit = false;*/
+    
    
     }
-    else if(this.coudit == true || this.coedit == true){
+    else if(this.coudit == true){
       const data = {course:this.coursen,uni:this.uni,dept:this.dept,dead:moment(this.deadline).format('YYYY-MM-DD'),};
       this.$emit('detail',data);
       this.coursen = '';
@@ -261,10 +239,8 @@ methods:{
       this.dept ='';
       this.deadline = '';
       this.professor = this.app.prof;
-      /*this.coedit =false;
-      this.save = false;*/
+      
     }
-
   },
   
   },

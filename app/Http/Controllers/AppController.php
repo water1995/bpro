@@ -28,7 +28,7 @@ class AppController extends Controller
         
         //echo $user;
         //echo Auth::user();
-        if(Auth::user() == null){
+       if(Auth::user() == null){
             return response(null,200);
         }
         else{
@@ -46,12 +46,14 @@ class AppController extends Controller
         //echo '   ';
         return response()->json([$user,$student,$req],200);
         }
-        /*else{
-            return response()->json([Auth::user()],200); 
-        }*/
+        else{
+            //return response()->json([Auth::user()],200);
+            return response()->json($user,200); 
+        }
     }
+}
 
-    }
+    
 
 
     public function login(Request $request)
